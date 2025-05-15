@@ -51,7 +51,11 @@ def simulate_light():
 
 
 def main():
-    client = mqtt.Client()
+
+    client = mqtt.Client(
+        client_id="your_client_id_123",  # 唯一客户端ID
+        protocol=mqtt.MQTTv311  # 明确协议版本
+    )
     client.on_connect = on_connect
     client.connect(BROKER, PORT, 60)
     client.loop_start()
