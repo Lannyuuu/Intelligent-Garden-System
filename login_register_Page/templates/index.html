@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Garden System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* 添加退出按钮样式 */
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .logout-btn:hover {
+            background-color: #cc0000;
+        }
+    </style>
+</head>
+<body>
+    <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+    <div class="container">
+        <h1>🌿 Smart Garden Monitoring System</h1>
+
+        <div class="sensor-grid">
+            <!-- Humidity Sensor -->
+            <div class="sensor-card {{ 'alert' if data.drought_alert else 'normal' }}">
+                <h2>💧 Air Humidity</h2>
+                <div class="value">{{ data.humidity }}%</div>
+                {% if data.drought_alert %}
+                <div class="alert-badge">Drought Alert!</div>
+                {% endif %}
+            </div>
+
+            <!-- Light Sensor -->
+            <div class="sensor-card">
+                <h2>💡 Light Intensity</h2>
+                <div class="value">{{ data.light }} lux</div>
+                <div class="light-level" style="width: {{ (data.light / 1000 * 100) }}%"></div>
+            </div>
+
+            <!-- PH Sensor -->
+            <div class="sensor-card {{ 'alert' if data.ph < 5.5 or data.ph > 8.5 else 'normal' }}">
+                <h2>🧪 Soil pH</h2>
+                <div class="value">{{ data.ph }}</div>
+                {% if data.ph < 5.5 or data.ph > 8.5 %}
+                <div class="alert-badge">pH Alert!</div>
+                {% endif %}
+            </div>
+
+            <!-- Rain Sensor -->
+            <div class="sensor-card {{ 'alert' if data.rain else 'normal' }}">
+                <h2>🌧️ Rain Detection</h2>
+                <div class="value">{{ "Rain detected" if data.rain else "No rain" }}</div>
+            </div>
+
+            <!-- CO2 Sensor -->
+            <div class="sensor-card {{ 'alert' if data.co2 > 1200 else 'normal' }}">
+                <h2>☁️ CO₂ Level</h2>
+                <div class="value">{{ data.co2 }} ppm</div>
+                {% if data.co2 > 1200 %}
+                <div class="alert-badge">High CO₂!</div>
+                {% endif %}
+            </div>
+
+            <!-- System Info -->
+            <div class="info-card">
+                <h2>🕒 Last Update</h2>
+                <div>{{ data.timestamp }}</div>
+                <div class="subtext">System received: {{ data.last_update }}</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auto-refresh data every 2 seconds
+        setInterval(() => {
+            location.reload();
+        }, 2000);
+    </script>
+</body>
+</html>
