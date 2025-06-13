@@ -1,0 +1,97 @@
+<!-- 导航栏模板 -->
+<style>
+    :root {
+        --primary-color: #c8e6c9; /* Very light green */
+        --secondary-color: #b2dfdb; /* Changed to a soft blue-green */
+        --accent-color: #3498db;
+        --text-color: #2c3e50;
+        --light-bg: #f8f9fa;
+        --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        --hover-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Navigation bar styles */
+    .nav-custom {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%) !important;
+        padding: 1.2rem !important;
+        margin-bottom: 2rem !important;
+        box-shadow: var(--card-shadow) !important;
+        position: relative !important;
+        z-index: 1000 !important;
+    }
+
+    .nav-custom .container {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        max-width: 1200px !important;
+        margin: 0 auto !important;
+        padding: 0 15px !important;
+    }
+
+    .nav-custom .nav-links {
+        display: flex !important;
+        gap: 1.5rem !important;
+        background: rgba(255, 255, 255, 0.1) !important;
+        padding: 0.5rem !important;
+        border-radius: 12px !important;
+        backdrop-filter: blur(5px) !important;
+    }
+
+    .nav-custom a {
+        color: var(--text-color) !important;
+        text-decoration: none !important;
+        font-size: 1.1rem !important;
+        padding: 0.8rem 1.5rem !important;
+        border-radius: 8px !important;
+        transition: all 0.3s ease !important;
+        background: rgba(255, 255, 255, 0.9) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        font-weight: 500 !important;
+        position: relative !important;
+        overflow: hidden !important;
+    }
+
+    .nav-custom a:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: var(--hover-shadow) !important;
+        color: var(--primary-color) !important;
+    }
+
+    .nav-custom .nav-right {
+        margin-left: auto !important;
+        color: white !important;
+        background: #e74c3c !important;
+        padding: 0.8rem 1.5rem !important;
+        border-radius: 8px !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .nav-custom .nav-right:hover {
+        background: #c0392b !important;
+        transform: translateY(-2px) !important;
+        box-shadow: var(--hover-shadow) !important;
+    }
+</style>
+
+<nav class="nav-custom">
+    <div class="container">
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}" class="{{ 'active' if request.endpoint == 'index' else '' }}">
+                <i class="fas fa-chart-line"></i> Real-time Monitoring
+            </a>
+            <a href="{{ url_for('chart') }}" class="{{ 'active' if request.endpoint == 'chart' else '' }}">
+                <i class="fas fa-chart-bar"></i> Monitoring Chart
+            </a>
+            <a href="{{ url_for('history') }}" class="{{ 'active' if request.endpoint == 'history' else '' }}">
+                <i class="fas fa-history"></i> Sensor History
+            </a>
+            <a href="{{ url_for('gpt_prediction') }}" class="{{ 'active' if request.endpoint == 'gpt_prediction' else '' }}">
+                <i class="fas fa-brain"></i> Trend Prediction
+            </a>
+        </div>
+        <a href="{{ url_for('logout') }}" class="nav-right">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+    </div>
+</nav> 

@@ -1,0 +1,321 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Garden System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #c8e6c9; /* Very light green */
+            --secondary-color: #b2dfdb; /* Changed to a soft blue-green */
+            --accent-color: #3498db;
+            --text-color: #2c3e50;
+            --light-bg: #f8f9fa;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --hover-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            background-image: url('static/背景图片.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
+        }
+
+        .card {
+            background-color: #ffffff;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(8px);
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+            background-color: #ffffff;
+        }
+
+        .card-body {
+            padding: 1.8rem;
+        }
+
+        .card-title {
+            color: var(--text-color);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .card-title i {
+            margin-right: 0.8rem;
+            color: var(--accent-color);
+            font-size: 1.6rem;
+        }
+
+        .card-text {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-top: 1rem;
+        }
+
+        .badge {
+            font-size: 0.9rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            margin-top: 1rem;
+            font-weight: 600;
+        }
+
+        .badge.bg-danger {
+            background-color: #e74c3c !important;
+            color: white !important;
+        }
+
+        .badge.bg-warning {
+            background-color: #f1c40f !important;
+            color: #2c3e50 !important;
+        }
+
+        .text-primary {
+            color: var(--accent-color) !important;
+        }
+
+        .text-warning {
+            color: #f39c12 !important;
+        }
+
+        .img-fluid {
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 3rem;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(5px);
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-item {
+            flex: 0 0 300px;
+            max-width: 320px;
+            min-height: 220px;
+            display: flex;
+        }
+
+        .card-item .card {
+            flex-grow: 1;
+        }
+
+        .row.mt-4 {
+            justify-content: center;
+            margin-top: 1.5rem !important;
+        }
+
+        .row.mt-4 .card-item {
+            flex: 0 0 300px;
+            max-width: 320px;
+            min-height: 220px;
+            margin: 0 0.75rem;
+            display: flex;
+        }
+
+        @media (min-width: 768px) and (max-width: 1199px) {
+            .row {
+                justify-content: center;
+            }
+            .card-item {
+                flex: 0 0 300px;
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .row {
+                gap: 1rem;
+            }
+            .card-item {
+                flex: 1 1 250px;
+                max-width: none;
+            }
+        }
+
+        .sensor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        @media (min-width: 992px) {
+            .sensor-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .sensor-grid .card-item {
+            flex: auto;
+            margin: 0;
+            min-height: 220px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sensor-grid .card-item .card {
+            flex-grow: 1;
+        }
+    </style>
+</head>
+<body>
+    {% include 'nav.html' %}
+
+    <div class="container">
+        <div class="sensor-grid">
+            <div class="card-item">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-tint"></i> Air Humidity</h5>
+                        <p class="card-text" id="humidity">{{ data.humidity }}%</p>
+                        <span class="badge bg-danger" id="humidity-alert" style="display: none;">Alert</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-item">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-sun"></i> Light Intensity</h5>
+                        <p class="card-text" id="light">{{ data.light }} lux</p>
+                        <span class="badge bg-warning" id="light-alert" style="display: none;">Alert</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-item">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-flask"></i> Soil pH</h5>
+                        <p class="card-text" id="ph">{{ data.ph }}</p>
+                        <span class="badge bg-danger" id="ph-alert" style="display: none;">Alert</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-item">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-cloud-rain"></i> Rain Detection</h5>
+                        <p class="card-text" id="rain">
+                            {% if data.rain %}
+                            <i class="fas fa-cloud-rain text-primary"></i> Raining
+                            {% else %}
+                            <i class="fas fa-sun text-warning"></i> No Rain
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="card-item">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-wind"></i> CO₂ Level</h5>
+                        <p class="card-text" id="co2">{{ data.co2 }} ppm</p>
+                        <span class="badge bg-danger" id="co2-alert" style="display: none;">Alert</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-item">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-clock"></i> Last Update</h5>
+                        <p class="card-text" id="timestamp">{{ data.timestamp }}</p>
+                        <small id="last-update">System received: {{ data.last_update }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateData() {
+            fetch('/api/latest')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('humidity').textContent = data.humidity.toFixed(1) + '%';
+                    document.getElementById('light').textContent = data.light.toFixed(1) + ' lux';
+                    document.getElementById('ph').textContent = data.ph.toFixed(1);
+                    document.getElementById('co2').textContent = data.co2.toFixed(1) + ' ppm';
+                    
+                    const rainElement = document.getElementById('rain');
+                    if (data.rain) {
+                        rainElement.innerHTML = '<i class="fas fa-cloud-rain text-primary"></i> Raining';
+                    } else {
+                        rainElement.innerHTML = '<i class="fas fa-sun text-warning"></i> No Rain';
+                    }
+                    
+                    const humidityAlert = document.getElementById('humidity-alert');
+                    if (data.humidity < 30 || data.humidity > 80) {
+                        humidityAlert.style.display = 'inline-block';
+                    } else {
+                        humidityAlert.style.display = 'none';
+                    }
+                    
+                    const lightAlert = document.getElementById('light-alert');
+                    if (data.light < 500 || data.light > 2000) {
+                        lightAlert.style.display = 'inline-block';
+                    } else {
+                        lightAlert.style.display = 'none';
+                    }
+                    
+                    const phAlert = document.getElementById('ph-alert');
+                    if (data.ph < 6.0 || data.ph > 7.0) {
+                        phAlert.style.display = 'inline-block';
+                    } else {
+                        phAlert.style.display = 'none';
+                    }
+                    
+                    const co2Alert = document.getElementById('co2-alert');
+                    if (data.co2 > 1200) {
+                        co2Alert.style.display = 'inline-block';
+                    } else {
+                        co2Alert.style.display = 'none';
+                    }
+
+                    document.getElementById('timestamp').textContent = data.timestamp;
+                    document.getElementById('last-update').textContent = 'System received: ' + data.last_update;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        setInterval(updateData, 2000);
+        updateData();
+    </script>
+</body>
+</html>
